@@ -1,0 +1,58 @@
+{
+  "skyline": {
+    "defaultRadiusM": 180000,
+    "maxRadiusM": 180000,
+    "minHorizonDistanceM": 15000,
+    "seaLevelMaxM": 1.0,
+    "azimuthStepDeg": 0.25,
+    "observerHeightOffsetM": 1.7,
+    "horizonLayers": 5
+  },
+  "depthOfField": {
+    "horizontalFovDeg": 70,
+    "lineWidthNearPx": 2.0,
+    "lineWidthFarPx": 1.2,
+    "distanceMinM": 100,
+    "offScreenMarginPx": 200
+  },
+  "gps": {
+    "recomputeThresholdM": 50,
+    "enableHighAccuracy": true,
+    "maximumAgeMs": 5000,
+    "timeoutMs": 15000
+  },
+  "cache": {
+    "maxSize": 64,
+    "gridM": 50
+  },
+  "horizon": {
+    "enabled": true,
+    "gridSpacingM": 10000,
+    "observerOffsetM": 100,
+    "maxNearestM": 12000
+  },
+  "ui": {
+    "skyColor": "#000000",
+    "skylineColor": "#FFFFFF",
+    "seaColor": "#3FA9F5",
+    "panStepDeg": 12,
+    "compassSizePx": 88,
+    "leaderLineWidthPx": 0.8
+  },
+  "labels": {
+    "fontSizePx": 11,
+    "lineHeightPx": 15,
+    "paddingPx": 4,
+    "widthPx": 130,
+    "leaderStubPx": 20
+  },
+  "api": {
+    "timeoutMs": 60000
+  },
+  "zoom": {
+    "minHFovDeg": 20,
+    "maxHFovDeg": 90,
+    "stepFactor": 1.2,
+    "wheelStepFactor": 1.0015
+  }
+}

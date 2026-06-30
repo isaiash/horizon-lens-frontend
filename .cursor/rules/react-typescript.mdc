@@ -1,0 +1,20 @@
+---
+description: React and TypeScript conventions
+globs: "frontend/src/**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# React / TypeScript Conventions
+
+- Functional components only; hooks for reusable logic.
+- API calls centralized in `frontend/src/api/client.ts`.
+- App tuning from `frontend/config.json` via `frontend/src/config.ts`.
+- Canvas rendering in `frontend/src/render/`.
+
+```typescript
+// Asset paths under subpath deploy
+export const MINIMAP_IMAGE = `${import.meta.env.BASE_URL}chile-dem.png`;
+
+// API base from env
+const API_BASE = import.meta.env.VITE_API_BASE ?? "";
+```

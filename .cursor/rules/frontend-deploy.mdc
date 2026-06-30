@@ -1,0 +1,24 @@
+---
+description: Frontend deployment and routing constraints
+alwaysApply: true
+---
+
+# Frontend Deployment Rules
+
+This repo is **frontend only**. Backend code belongs in `horizon-lens-backend`.
+
+## Cloudflare Pages
+
+- App is served at `https://isaiash.com/horizon/` — Vite `base` must stay `/horizon/`.
+- Static assets must use `import.meta.env.BASE_URL`, never hardcoded `/assets/` or `/chile-dem.png`.
+- SPA fallback: `frontend/public/_redirects`.
+
+## API configuration
+
+- Backend URL is set at build time via `VITE_API_BASE`.
+- Value is the host only (e.g. `https://horizon.ac3eplatforms.com`), **without** `/api` suffix.
+- All fetch calls go through `frontend/src/api/client.ts`.
+
+## Do not add
+
+- Backend, DEM data, Docker Compose, or database schemas to this repo.
