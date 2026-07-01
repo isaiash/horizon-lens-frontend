@@ -39,9 +39,24 @@ jobs:
       - name: Prepare Workers deploy bundle
         run: npm run prepare:deploy
 
+      - name: Verify deploy bundle
+        run: test -f dist/horizon/index.html
+
       - name: Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: deploy
+
+  trigger-shared-deploy:
+    needs: deploy
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger deploy via digital-garden (fallback)
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.GH_PAT }}
+          repository: isaiash/digital-garden-isaias
+          event-type: deploy-horizon

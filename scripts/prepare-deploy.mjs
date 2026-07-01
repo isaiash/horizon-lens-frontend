@@ -22,3 +22,4 @@ rmSync(join(horizonDist, '_redirects'), { force: true })
 writeFileSync(join(deployDist, '_redirects'), '/horizon /horizon/ 301\n')
 
 console.log('Deploy bundle ready at dist/horizon/')
+console.log('Deploy with: wrangler deploy (Worker route isaiash.com/horizon/*)')

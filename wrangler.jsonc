@@ -8,7 +8,11 @@
   },
   "routes": [
     {
-      "pattern": "isaiash.com/horizon*",
+      "pattern": "isaiash.com/horizon/*",
+      "zone_name": "isaiash.com"
+    },
+    {
+      "pattern": "isaiash.com/horizon",
       "zone_name": "isaiash.com"
     }
   ],
