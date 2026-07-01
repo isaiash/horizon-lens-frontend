@@ -1,0 +1,13 @@
+{
+  "name": "horizon-lens-frontend",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "npm run build --prefix frontend",
+    "prepare:deploy": "node scripts/prepare-deploy.mjs",
+    "deploy": "npm run build && npm run prepare:deploy && wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.94.0"
+  }
+}

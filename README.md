@@ -44,26 +44,30 @@ Output: `frontend/dist/` with assets under `/horizon/assets/`.
 
 ---
 
-## Cloudflare Pages deployment
+## Cloudflare Workers deployment
 
-Configure in the Cloudflare Pages dashboard:
+Push to `main` deploys automatically via GitHub Actions.
 
 | Setting | Value |
 |---------|-------|
-| **Root directory** | `frontend` |
-| **Build command** | `npm ci && npm run build` |
-| **Build output directory** | `dist` |
+| **Worker name** | `horizon-lens` |
+| **Route** | `isaiash.com/horizon*` |
+| **Build command** | `npm ci --prefix frontend && npm run build --prefix frontend` |
 | **Environment variable** | `VITE_API_BASE=https://horizon.ac3eplatforms.com` |
+| **GitHub secrets** | `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` |
 
-The app is served at `https://isaiash.com/horizon/` (configure custom path routing on your main domain).
+Manual deploy from repo root:
+
+```bash
+npm install
+VITE_API_BASE=https://horizon.ac3eplatforms.com npm run deploy
+```
+
+The app is served at `https://isaiash.com/horizon/`.
 
 ### SPA routing
 
-`frontend/public/_redirects` handles client-side routing:
-
-```
-/horizon/*  /horizon/index.html  200
-```
+`frontend/public/_redirects` is used for local dev. The Workers deploy script removes it from the upload bundle and relies on `not_found_handling: single-page-application` in `wrangler.jsonc`.
 
 ### HTTPS and sensors
 

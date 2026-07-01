@@ -7,11 +7,13 @@ alwaysApply: true
 
 This repo is **frontend only**. Backend code belongs in `horizon-lens-backend`.
 
-## Cloudflare Pages
+## Cloudflare Workers
 
-- App is served at `https://isaiash.com/horizon/` — Vite `base` must stay `/horizon/`.
+- App is served at `https://isaiash.com/horizon/` via Worker `horizon-lens` on route `isaiash.com/horizon*`.
+- Vite `base` must stay `/horizon/`.
 - Static assets must use `import.meta.env.BASE_URL`, never hardcoded `/assets/` or `/chile-dem.png`.
-- SPA fallback: `frontend/public/_redirects`.
+- Deploy from this repo (GitHub Actions on `main` or `npm run deploy` at repo root). Do not bundle through `digital-garden-isaias`.
+- `scripts/prepare-deploy.mjs` copies `frontend/dist/` into `dist/horizon/` and strips `frontend/public/_redirects` before Workers upload.
 
 ## API configuration
 

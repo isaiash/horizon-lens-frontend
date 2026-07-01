@@ -6,7 +6,7 @@ React SPA for Horizon Lens — a real-time mountain skyline overlay using GPS an
 
 - **Framework:** React 18
 - **Build:** Vite 5 + TypeScript
-- **Deployment:** Cloudflare Pages at `https://isaiash.com/horizon`
+- **Deployment:** Cloudflare Workers at `https://isaiash.com/horizon`
 - **Backend API:** `https://horizon.ac3eplatforms.com` (configured via `VITE_API_BASE`)
 
 ## Setup
@@ -29,14 +29,24 @@ VITE_API_BASE=https://horizon.ac3eplatforms.com npm run build
 
 Output: `frontend/dist/`
 
-## Cloudflare Pages
+## Cloudflare Workers deployment
+
+Push to `main` deploys automatically via GitHub Actions (`.github/workflows/deploy.yml`).
 
 | Setting | Value |
 |---------|-------|
-| Root directory | `frontend` |
-| Build command | `npm ci && npm run build` |
-| Output directory | `dist` |
-| Environment variable | `VITE_API_BASE=https://horizon.ac3eplatforms.com` |
+| Worker name | `horizon-lens` |
+| Route | `isaiash.com/horizon*` |
+| Build env | `VITE_API_BASE=https://horizon.ac3eplatforms.com` |
+| GitHub secrets | `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` |
+
+Manual deploy from repo root:
+
+```bash
+npm install
+npm ci --prefix frontend
+VITE_API_BASE=https://horizon.ac3eplatforms.com npm run deploy
+```
 
 Production URL: `https://isaiash.com/horizon/`
 
@@ -46,6 +56,7 @@ Production URL: `https://isaiash.com/horizon/`
 - `VITE_API_BASE` must **not** include `/api` (the client appends `/api/skyline`, etc.).
 - This repo contains **frontend only**. Backend pipeline is in `horizon-lens-backend`.
 - Never commit `.env` or `node_modules/`.
+- Do **not** deploy through `digital-garden-isaias`; this repo owns `/horizon` on `isaiash.com`.
 
 ## Directory Structure
 
@@ -57,8 +68,11 @@ Production URL: `https://isaiash.com/horizon/`
 │   │   ├── render/          # Canvas skyline renderer
 │   │   └── sensors/         # GPS + compass
 │   ├── public/
-│   │   └── _redirects       # SPA fallback for Cloudflare Pages
+│   │   └── _redirects       # Local dev / Pages-style SPA fallback (stripped for Workers deploy)
 │   └── config.json          # App tuning (shared with build)
+├── scripts/prepare-deploy.mjs # Copies build into dist/horizon/ for Workers subpath routing
+├── wrangler.jsonc
+├── .github/workflows/deploy.yml
 ├── .env.example
 └── README.md
 ```
