@@ -26,6 +26,12 @@ interface UseGeolocationResult {
   error: string | null;
   /** Position that has actually moved beyond the threshold */
   triggeredPosition: GeoPosition | null;
+  /**
+   * Explicitly triggers a one-shot geolocation request from within a user
+   * gesture, so browsers (notably iOS Safari) reliably show the permission
+   * prompt instead of relying on the implicit watchPosition on mount.
+   */
+  requestLocation: () => void;
 }
 
 function haversineM(lat1: number, lon1: number, lat2: number, lon2: number): number {
@@ -84,5 +90,20 @@ export function useGeolocation(): UseGeolocationResult {
     return () => navigator.geolocation.clearWatch(id);
   }, [handlePosition]);
 
-  return { position, error, triggeredPosition };
+  const requestLocation = useCallback(() => {
+    if (!navigator.geolocation) {
+      setError("Geolocation is not supported by this browser.");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(handlePosition, (err) => {
+      setError(`GPS error (${err.code}): ${err.message}`);
+    }, {
+      enableHighAccuracy: appConfig.gps.enableHighAccuracy,
+      maximumAge: appConfig.gps.maximumAgeMs,
+      timeout: appConfig.gps.timeoutMs,
+    });
+  }, [handlePosition]);
+
+  return { position, error, triggeredPosition, requestLocation };
 }

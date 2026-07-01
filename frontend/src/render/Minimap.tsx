@@ -1,7 +1,7 @@
 /**
  * Minimap
  * =======
- * Top-right DEM thumbnail. Click opens a zoomable OpenStreetMap overlay
+ * Top-right map icon button. Click opens a zoomable OpenStreetMap overlay
  * to pick observer position.
  */
 
@@ -9,7 +9,7 @@ import React, { useCallback, useEffect, useRef, useState, type FC } from "react"
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import type { City, PlacePeak } from "../api/client";
-import { MINIMAP_BOUNDS, MINIMAP_IMAGE } from "./minimapBounds";
+import { MINIMAP_BOUNDS } from "./minimapBounds";
 
 export interface MapPosition {
   latitude: number;
@@ -27,28 +27,6 @@ interface Props {
   onRecenter: () => void;
   expanded?: boolean;
   onExpandedChange?: (open: boolean) => void;
-}
-
-const THUMB_W = 72;
-
-const aspect =
-  (MINIMAP_BOUNDS.north - MINIMAP_BOUNDS.south) /
-  (MINIMAP_BOUNDS.east - MINIMAP_BOUNDS.west);
-
-function thumbHeight(mapW: number): number {
-  return Math.round(mapW * aspect);
-}
-
-function lonLatToThumbPixel(
-  lon: number,
-  lat: number,
-  mapW: number,
-  mapH: number
-): { x: number; y: number } {
-  const { west, east, south, north } = MINIMAP_BOUNDS;
-  const x = ((lon - west) / (east - west)) * mapW;
-  const y = ((north - lat) / (north - south)) * mapH;
-  return { x, y };
 }
 
 const chileBounds = L.latLngBounds(
@@ -283,36 +261,6 @@ export const Minimap: FC<Props> = ({
     },
     [expandedProp, onExpandedChange]
   );
-  const thumbH = thumbHeight(THUMB_W);
-
-  const renderThumbMarker = useCallback(
-    (pos: MapPosition, color: string, size: number, zIndex: number) => {
-      const { x, y } = lonLatToThumbPixel(
-        pos.longitude,
-        pos.latitude,
-        THUMB_W,
-        thumbH
-      );
-      return (
-        <div
-          key={`${pos.latitude}-${pos.longitude}-${color}`}
-          style={{
-            position: "absolute",
-            left: x - size / 2,
-            top: y - size / 2,
-            width: size,
-            height: size,
-            borderRadius: "50%",
-            background: color,
-            border: `1px solid ${fg}`,
-            zIndex,
-            pointerEvents: "none",
-          }}
-        />
-      );
-    },
-    [fg, thumbH]
-  );
 
   return (
     <>
@@ -328,41 +276,43 @@ export const Minimap: FC<Props> = ({
         }}
         onPointerDown={(e) => e.stopPropagation()}
       >
-        <div
+        <button
+          type="button"
+          aria-label="Open Chile map"
+          onClick={(e) => {
+            e.stopPropagation();
+            setExpanded(true);
+          }}
           style={{
-            position: "relative",
+            width: 32,
+            height: 32,
             border: `1px solid ${fg}`,
             background: bg,
+            color: fg,
             cursor: "pointer",
-            overflow: "hidden",
-            width: THUMB_W,
-            height: thumbH,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 0,
             opacity: 0.92,
           }}
-          onClick={() => setExpanded(true)}
-          role="button"
-          aria-label="Open Chile map"
         >
-          <img
-            src={MINIMAP_IMAGE}
-            alt="Chile elevation map"
-            draggable={false}
-            style={{
-              width: THUMB_W,
-              height: thumbH,
-              display: "block",
-              objectFit: "fill",
-              filter: fg === "#FFFFFF" ? "none" : "invert(1)",
-            }}
-          />
-
-          {activePosition && renderThumbMarker(activePosition, fg, 6, 3)}
-          {gpsPosition &&
-            activePosition &&
-            (gpsPosition.latitude !== activePosition.latitude ||
-              gpsPosition.longitude !== activePosition.longitude) &&
-            renderThumbMarker(gpsPosition, fg, 4, 2)}
-        </div>
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden
+          >
+            <polygon points="1 6 8 3 16 6 23 3 23 18 16 21 8 18 1 21" />
+            <line x1="8" y1="3" x2="8" y2="18" />
+            <line x1="16" y1="6" x2="16" y2="21" />
+          </svg>
+        </button>
 
         <button
           type="button"

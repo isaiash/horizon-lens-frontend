@@ -46,5 +46,5 @@ export const SANTIAGO = {
 
 export function isSantiago(name: string | null | undefined): boolean {
   if (!name) return false;
-  return name.toLowerCase().includes("santiago");
+  return name.trim().toLowerCase() === "santiago";
 }

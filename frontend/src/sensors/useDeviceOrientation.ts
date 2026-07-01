@@ -65,7 +65,7 @@ export function useDeviceOrientation(): OrientationState {
     // pitch: beta is tilt of the device relative to horizontal (−180 to 180°)
     // When held vertically (portrait AR-style), beta ≈ 90° and we map that to 0° pitch.
     const beta = event.beta ?? 90;
-    const p = -(beta - 90); // −90=down, 0=horizontal, +90=up
+    const p = beta - 90; // −90=down, 0=horizontal, +90=up
     setPitch(p);
   }, []);
 

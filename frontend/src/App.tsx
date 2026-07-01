@@ -93,7 +93,12 @@ const actionButtonStyle = (
 });
 
 const App: FC = () => {
-  const { position, triggeredPosition, error: gpsError } = useGeolocation();
+  const {
+    position,
+    triggeredPosition,
+    error: gpsError,
+    requestLocation,
+  } = useGeolocation();
   const {
     heading,
     pitch,
@@ -261,9 +266,12 @@ const App: FC = () => {
             <button
               type="button"
               style={actionButtonStyle(fg, bg)}
-              onClick={() => void requestPermission()}
+              onClick={() => {
+                void requestPermission();
+                requestLocation();
+              }}
             >
-              Enable compass
+              Enable compass and location
             </button>
             <button
               type="button"
