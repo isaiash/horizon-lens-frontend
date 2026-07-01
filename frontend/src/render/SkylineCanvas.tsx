@@ -34,6 +34,7 @@ interface Props {
   cities: CityLabelInput[];
   headingDeg: number;
   pitchDeg: number;
+  viewResetKey?: string;
   showLoadingBar: boolean;
   loadingPhase: "gps" | "computing";
   error: string | null;
@@ -86,6 +87,7 @@ export const SkylineCanvas: FC<Props> = ({
   cities,
   headingDeg,
   pitchDeg,
+  viewResetKey,
   showLoadingBar,
   loadingPhase,
   error,
@@ -122,6 +124,12 @@ export const SkylineCanvas: FC<Props> = ({
   useEffect(() => {
     panOffsetRef.current = panOffsetDeg;
   }, [panOffsetDeg]);
+
+  useEffect(() => {
+    if (viewResetKey === undefined) return;
+    setPanOffsetDeg(0);
+    panOffsetRef.current = 0;
+  }, [viewResetKey]);
 
   const setZoom = useCallback((next: number | ((prev: number) => number)) => {
     setHFovDeg((prev) =>

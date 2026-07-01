@@ -186,11 +186,19 @@ const App: FC = () => {
     );
   }, [activePosition, places]);
 
-  const handleMapPick = useCallback((lat: number, lon: number) => {
-    setManualPosition({ latitude: lat, longitude: lon });
-    setManualMode(true);
-    setMapPickerOpen(false);
-  }, []);
+  const handleMapPick = useCallback(
+    (lat: number, lon: number) => {
+      void requestPermission();
+      setManualPosition({ latitude: lat, longitude: lon });
+      setManualMode(true);
+      setMapPickerOpen(false);
+    },
+    [requestPermission]
+  );
+
+  const viewResetKey = activePosition
+    ? `${activePosition.latitude},${activePosition.longitude}`
+    : undefined;
 
   const displayError = permissionError ?? gpsError ?? apiError;
   const showLoadingBar = (!skylineData && !displayError) || loading;
@@ -276,7 +284,10 @@ const App: FC = () => {
             <button
               type="button"
               style={actionButtonStyle(fg, bg)}
-              onClick={() => setMapPickerOpen(true)}
+              onClick={() => {
+                void requestPermission();
+                setMapPickerOpen(true);
+              }}
             >
               Pick location on map
             </button>
@@ -300,6 +311,7 @@ const App: FC = () => {
         cities={arCities}
         headingDeg={heading}
         pitchDeg={pitch}
+        viewResetKey={viewResetKey}
         showLoadingBar={showLoadingBar}
         loadingPhase={loadingPhase}
         error={displayError}
@@ -316,7 +328,10 @@ const App: FC = () => {
         fg={fg}
         bg={bg}
         onPick={handleMapPick}
-        onRecenter={() => setManualPosition(null)}
+        onRecenter={() => {
+          setManualPosition(null);
+          setManualMode(false);
+        }}
         expanded={mapPickerOpen}
         onExpandedChange={setMapPickerOpen}
       />
