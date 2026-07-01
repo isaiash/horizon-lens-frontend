@@ -1,27 +1,36 @@
 # Deployment
 
-Horizon Lens is served at `https://isaiash.com/horizon/` by the **Cloudflare Worker** `horizon-lens` (not Cloudflare Pages).
+Horizon Lens is served at `https://isaiash.com/horizon/` from the `isaiash-dev` Worker (`dist/horizon/` assets).
 
-## Required GitHub secrets (this repo)
+## How deploys work
+
+| Event | What runs |
+|-------|-----------|
+| Push to `horizon-lens-frontend` `main` | `trigger-deploy.yml` → redeploys `isaiash/isaiash-dev` |
+| Push to `isaiash-dev` `main` | Builds latest Horizon Lens from this repo and deploys |
+
+## Required GitHub secret (this repo)
 
 | Secret | Purpose |
 |--------|---------|
-| `CLOUDFLARE_API_TOKEN` | Wrangler deploy (same token as `digital-garden-isaias`) |
+| `GH_PAT` | Fine-grained or classic PAT with `repo` scope on `isaiash/isaiash-dev` |
+
+Create at GitHub → Settings → Developer settings → Personal access tokens.
+
+## Optional: direct Worker deploy
+
+To deploy the standalone `horizon-lens` Worker instead of bundling into `isaiash-dev`, add these secrets and use `.github/workflows/deploy.yml`:
+
+| Secret | Purpose |
+|--------|---------|
+| `CLOUDFLARE_API_TOKEN` | Same token as `isaiash-dev` |
 | `CLOUDFLARE_ACCOUNT_ID` | Cloudflare account ID |
 
-Optional fallback if the secrets above are missing:
+## Disable Cloudflare Pages
 
-| Secret | Purpose |
-|--------|---------|
-| `GH_PAT` | Personal access token with `repo` scope to trigger `digital-garden-isaias` workflow `Deploy Horizon Lens Worker` |
+Disconnect the **Pages** project linked to this repo. Pages cannot serve `isaiash.com/horizon/` and conflicts with the Worker setup.
 
-## Disable Cloudflare Pages for this repo
-
-If a **Pages** project is connected to `horizon-lens-frontend`, disconnect it in the Cloudflare dashboard. Pages cannot serve `isaiash.com/horizon/` on the main domain; it conflicts with the Worker setup.
-
-Workers & Pages → select the Pages project → Settings → delete or pause Git integration.
-
-## Verify after deploy
+## Verify
 
 ```bash
 curl -s https://isaiash.com/horizon/ | grep '<title>'

@@ -6,7 +6,7 @@ React SPA for Horizon Lens — a real-time mountain skyline overlay using GPS an
 
 - **Framework:** React 18
 - **Build:** Vite 5 + TypeScript
-- **Deployment:** Cloudflare Workers at `https://isaiash.com/horizon`
+- **Deployment:** Cloudflare Workers at `https://isaiash.com/horizon` (bundled into `isaiash-dev` Worker, built from this repo in CI)
 - **Backend API:** `https://horizon.ac3eplatforms.com` (configured via `VITE_API_BASE`)
 
 ## Setup
