@@ -34,6 +34,7 @@ interface Props {
   cities: CityLabelInput[];
   headingDeg: number;
   pitchDeg: number;
+  headingReady: boolean;
   viewResetKey?: string;
   showLoadingBar: boolean;
   loadingPhase: "gps" | "computing";
@@ -87,6 +88,7 @@ export const SkylineCanvas: FC<Props> = ({
   cities,
   headingDeg,
   pitchDeg,
+  headingReady,
   viewResetKey,
   showLoadingBar,
   loadingPhase,
@@ -238,7 +240,7 @@ export const SkylineCanvas: FC<Props> = ({
     ctx.fillStyle = bg;
     ctx.fillRect(0, 0, W, H);
 
-    if (skylineData && skylineData.skyline.length > 0) {
+    if (skylineData && skylineData.skyline.length > 0 && headingReady) {
       const layers = skylineData.layers ?? [];
       const distanceMinM =
         layers[0]?.distance_min_m ?? DEPTH_DISTANCE_MIN_M;
@@ -331,7 +333,7 @@ export const SkylineCanvas: FC<Props> = ({
 
     _drawHud(ctx, W, H, gpsAccuracy, error, fg);
 
-    if (showLoadingBar) {
+    if (showLoadingBar || (skylineData && skylineData.skyline.length > 0 && !headingReady)) {
       _drawLoadingBar(ctx, W, H, performance.now(), loadingPhase, fg, bg);
     }
 

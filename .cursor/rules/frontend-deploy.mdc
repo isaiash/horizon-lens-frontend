@@ -9,11 +9,12 @@ This repo is **frontend only**. Backend code belongs in `horizon-lens-backend`.
 
 ## Cloudflare Workers
 
-- App is served at `https://isaiash.com/horizon/` via the `isaiash-dev` Worker (`dist/horizon/` assets).
-- Push to this repo triggers a redeploy of `isaiash/isaiash-dev` (requires `GH_PAT` secret).
+- App is served at `https://isaiash.com/horizon/` via the standalone `horizon-lens` Worker.
+- Push to `main` deploys via `.github/workflows/deploy.yml` (requires `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`).
 - Vite `base` must stay `/horizon/`.
 - Static assets must use `import.meta.env.BASE_URL`, never hardcoded `/assets/` or `/chile-dem.png`.
 - Do **not** use Cloudflare Pages for this repo.
+- Do **not** deploy through `digital-garden-isaias`; this repo owns `/horizon` on `isaiash.com`.
 
 ## API configuration
 

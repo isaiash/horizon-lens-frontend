@@ -56,10 +56,11 @@ Push to `main` deploys automatically via GitHub Actions.
 | **Environment variable** | `VITE_API_BASE=https://horizon.ac3eplatforms.com` |
 | **GitHub secrets** | `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` |
 
-Manual deploy from repo root:
+Manual deploy from repo root (requires Cloudflare auth — run `npx wrangler login` once, or set `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`):
 
 ```bash
 npm install
+npm ci --prefix frontend
 VITE_API_BASE=https://horizon.ac3eplatforms.com npm run deploy
 ```
 

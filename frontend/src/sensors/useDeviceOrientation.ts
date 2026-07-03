@@ -23,6 +23,7 @@ export interface OrientationState {
   pitch: number;          // degrees, positive = looking up
   hasPermission: boolean;
   permissionError: string | null;
+  headingReady: boolean;  // true once the first valid compass reading arrives
   requestPermission: () => Promise<void>;
 }
 
@@ -43,6 +44,7 @@ export function useDeviceOrientation(): OrientationState {
   const [pitch, setPitch] = useState(0);
   const [hasPermission, setHasPermission] = useState(false);
   const [permissionError, setPermissionError] = useState<string | null>(null);
+  const [headingReady, setHeadingReady] = useState(false);
 
   const handleOrientation = useCallback((event: DeviceOrientationEvent) => {
     const e = event as IOSDeviceOrientationEvent;
@@ -61,6 +63,7 @@ export function useDeviceOrientation(): OrientationState {
     }
 
     setHeading(h);
+    setHeadingReady(true);
 
     // pitch: beta is tilt of the device relative to horizontal (−180 to 180°)
     // When held vertically (portrait AR-style), beta ≈ 90° and we map that to 0° pitch.
@@ -117,6 +120,7 @@ export function useDeviceOrientation(): OrientationState {
     pitch,
     hasPermission,
     permissionError,
+    headingReady,
     requestPermission,
   };
 }

@@ -104,6 +104,7 @@ const App: FC = () => {
     pitch,
     hasPermission,
     permissionError,
+    headingReady,
     requestPermission,
   } = useDeviceOrientation();
 
@@ -311,6 +312,7 @@ const App: FC = () => {
         cities={arCities}
         headingDeg={heading}
         pitchDeg={pitch}
+        headingReady={headingReady}
         viewResetKey={viewResetKey}
         showLoadingBar={showLoadingBar}
         loadingPhase={loadingPhase}
